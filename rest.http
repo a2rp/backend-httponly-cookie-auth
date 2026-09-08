@@ -1,0 +1,32 @@
+@baseUrl = http://localhost:1198
+
+### API status
+GET {{baseUrl}}/
+
+### Health
+GET {{baseUrl}}/health
+
+### Register
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+    "name": "Ashish",
+    "email": "ashish@example.com",
+    "password": "password123"
+}
+
+### Login
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "ashish@example.com",
+    "password": "password123"
+}
+
+### Current user
+GET {{baseUrl}}/api/auth/me
+
+### Logout
+POST {{baseUrl}}/api/auth/logout

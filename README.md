@@ -1,95 +1,87 @@
 # backend-httponly-cookie-auth
 
-Backend authentication API using HttpOnly cookies (no localStorage tokens).
+Secure JWT authentication API using HttpOnly cookies, bcrypt password hashing, MongoDB, and Express.
 
 ## Features
 
-- Register user
-- Login user
-- Logout user
-- Protected route (get current user)
-- JWT authentication
-- HttpOnly cookie based auth
-- Password hashing using bcrypt
-- MongoDB with Mongoose
+- User registration, login, logout, and current-user endpoints
+- JWT stored in an HttpOnly cookie
+- Secure production cookie configuration
+- Bcrypt password hashing
+- Configurable CORS with credentials
+- Helmet security headers
+- Authentication rate limiting
+- Request validation and safe error responses
+- MongoDB persistence through Mongoose
 
-## Tech Stack
+## Stack
 
-- Node.js
-- Express.js
-- MongoDB
-- Mongoose
-- JWT
+- Node.js and Express
+- MongoDB and Mongoose
+- JSON Web Token
 - bcryptjs
 - cookie-parser
+- Helmet
+- express-rate-limit
 
-## Environment Variables
-
-Create a `.env` file:
-
-```bash
-PORT=1198
-MONGO_URI=mongodb://127.0.0.1:27017/backend_httponly_cookie_auth
-JWT_SECRET=your_secret_key
-NODE_ENV=development
-```
-
-## Install
+## Setup
 
 ```bash
 npm install
+copy .env.example .env
 ```
 
-## Run
+Update `.env` with a working MongoDB connection and a random JWT secret of at least 32 characters.
+
+Start the development server:
 
 ```bash
 npm run dev
 ```
 
-## API Endpoints
+The default port is `1198`.
 
-### Register
+## Environment variables
 
-POST /api/auth/register
+| Variable | Required | Description |
+| --- | --- | --- |
+| `PORT` | No | Server port, defaults to `1198` |
+| `MONGO_URI` | Yes | MongoDB connection string |
+| `JWT_SECRET` | Yes | Random signing secret, minimum 32 characters |
+| `NODE_ENV` | No | Use `production` to enable Secure cookies |
+| `CLIENT_ORIGINS` | No | Comma-separated trusted frontend origins |
+| `COOKIE_SAME_SITE` | No | Cookie policy, defaults to `lax` |
 
-```json
-{
-    "name": "Ashish",
-    "email": "ashish@example.com
-    ",
-    "password": "123456"
-}
-```
+## API
 
-### Login
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| GET | `/` | API status |
+| GET | `/health` | Health response |
+| POST | `/api/auth/register` | Register and authenticate a user |
+| POST | `/api/auth/login` | Login and set the auth cookie |
+| POST | `/api/auth/logout` | Clear the auth cookie |
+| GET | `/api/auth/me` | Get the authenticated user |
 
-POST /api/auth/login
+Use `credentials: "include"` from a browser frontend so cookies are sent with requests.
 
-```json
-{
-    "email": "ashish@example.com",
-    "password": "123456"
-}
-```
+Detailed flow and security notes are available in [Documentation.md](./Documentation.md). Request examples are available in [rest.http](./rest.http).
 
-### Logout
+## License
 
-POST /api/auth/logout
+MIT. See [LICENSE](./LICENSE).
 
-### Get Current User (Protected)
+## Author
 
-GET /api/auth/me
+Ashish Ranjan, Full-Stack Web Developer
 
-## Notes
-
-- Uses HttpOnly cookies for authentication
-- Cookies are automatically handled by browser
-- Use `withCredentials: true` in frontend
-
-## Follow Me
-
+- Portfolio: https://ashishranjan.in/
 - GitHub: https://github.com/a2rp
-- Portfolio: https://www.ashishranjan.net
 - LinkedIn: https://www.linkedin.com/in/aashishranjan
-- Facebook: https://www.facebook.com/theash.ashish/
-- YouTube: https://www.youtube.com/@ashishranjan-ashz
+- Email: mailto:ash.ranjan09@gmail.com
+
+## Support
+
+- Support page: https://a2rp-donation-page.netlify.app/
+- Buy Me a Coffee: https://buymeacoffee.com/a2rp
+- Patreon: https://www.patreon.com/a2rp
