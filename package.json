@@ -1,8 +1,8 @@
 {
     "name": "backend-httponly-cookie-auth",
     "version": "1.0.0",
-    "description": "JWT authentication API using secure HttpOnly cookies and MongoDB",
-    "main": "index.js",
+    "description": "Express 5 and MongoDB authentication API with bcrypt and secure HttpOnly JWT cookies",
+    "main": "src/index.js",
     "scripts": {
         "dev": "nodemon src/index.js",
         "start": "node src/index.js",
@@ -14,11 +14,21 @@
         "jwt",
         "httponly",
         "authentication",
-        "mongodb"
+        "mongodb",
+        "bcryptjs",
+        "cors",
+        "express-5",
+        "http-only-cookie",
+        "rate-limiting",
+        "rest-api",
+        "user-registration"
     ],
     "author": "Ashish Ranjan",
     "license": "MIT",
     "type": "commonjs",
+    "engines": {
+        "node": ">=20.19.0"
+    },
     "dependencies": {
         "bcryptjs": "^3.0.3",
         "cookie-parser": "^1.4.7",

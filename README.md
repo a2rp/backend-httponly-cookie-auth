@@ -31,7 +31,7 @@ npm install
 copy .env.example .env
 ```
 
-Update `.env` with a working MongoDB connection and a random JWT secret of at least 32 characters.
+Replace the `JWT_SECRET` placeholder with a unique random value of at least 32 characters. In production, set `NODE_ENV=production` and provide the exact trusted frontend origins in `CLIENT_ORIGINS`.
 
 Start the development server:
 
@@ -47,10 +47,10 @@ The default port is `1198`.
 | --- | --- | --- |
 | `PORT` | No | Server port, defaults to `1198` |
 | `MONGO_URI` | Yes | MongoDB connection string |
-| `JWT_SECRET` | Yes | Random signing secret, minimum 32 characters |
+| `JWT_SECRET` | Yes | Unique random signing secret, minimum 32 characters |
 | `NODE_ENV` | No | Use `production` to enable Secure cookies |
 | `CLIENT_ORIGINS` | No | Comma-separated trusted frontend origins |
-| `COOKIE_SAME_SITE` | No | Cookie policy, defaults to `lax` |
+| `COOKIE_SAME_SITE` | No | `strict`, `lax`, or `none`; defaults to `lax`. `none` requires production Secure cookies. |
 
 ## API
 
@@ -64,6 +64,10 @@ The default port is `1198`.
 | GET | `/api/auth/me` | Get the authenticated user |
 
 Use `credentials: "include"` from a browser frontend so cookies are sent with requests.
+
+Passwords must contain at least 8 characters and no more than 72 UTF-8 bytes. They are hashed with bcrypt before storage. Authentication routes are limited to 30 requests per IP every 15 minutes; this in-memory limit is per server process, so multi-instance deployments need a shared rate-limit store.
+
+The JWT and cookie expire after seven days. Logging out clears the browser cookie; it does not revoke a copied token before expiry.
 
 
 ## License
@@ -84,19 +88,3 @@ Ashish Ranjan, Full-Stack Web Developer
 - Support page: https://a2rp-donation-page.netlify.app/
 - Buy Me a Coffee: https://buymeacoffee.com/a2rp
 - Patreon: https://www.patreon.com/a2rp
-
-## Links
-
-- Portfolio: [https://www.ashishranjan.net](https://www.ashishranjan.net)
-- GitHub: [https://github.com/a2rp](https://github.com/a2rp)
-- CodePen: [https://codepen.io/ash1198](https://codepen.io/ash1198)
-- LinkedIn: [https://www.linkedin.com/in/aashishranjan](https://www.linkedin.com/in/aashishranjan)
-- Facebook: [https://www.facebook.com/theash.ashish/](https://www.facebook.com/theash.ashish/)
-- YouTube: [https://www.youtube.com/@ashishranjan-ashz?sub_confirmation=1](https://www.youtube.com/@ashishranjan-ashz?sub_confirmation=1)
-- Email: [ash.ranjan09@gmail.com](mailto:ash.ranjan09@gmail.com)
-
-## Support
-
-- Support: [https://a2rp-donation-page.netlify.app/](https://a2rp-donation-page.netlify.app/)
-- Buy Me A Coffee: [https://buymeacoffee.com/a2rp](https://buymeacoffee.com/a2rp)
-- Patreon: [https://patreon.com/a2rp](https://patreon.com/a2rp)

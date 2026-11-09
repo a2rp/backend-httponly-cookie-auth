@@ -4,7 +4,11 @@ const { cookieOptions, clearCookieOptions } = require("../utils/cookieOptions");
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-const generateToken = (userId) => jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: "7d" });
+const generateToken = (userId) =>
+    jwt.sign({ userId }, process.env.JWT_SECRET, {
+        expiresIn: "7d",
+        algorithm: "HS256",
+    });
 
 const publicUser = (user) => ({
     _id: user._id,
@@ -13,16 +17,27 @@ const publicUser = (user) => ({
 });
 
 const validateCredentials = ({ name, email, password }, isRegistration = false) => {
-    if (isRegistration && (!name || typeof name !== "string" || name.trim().length < 2)) {
-        return "Name must contain at least 2 characters";
+    if (
+        isRegistration &&
+        (typeof name !== "string" || name.trim().length < 2 || name.trim().length > 100)
+    ) {
+        return "Name must contain between 2 and 100 characters";
     }
 
-    if (!email || typeof email !== "string" || !emailPattern.test(email.trim())) {
+    if (
+        typeof email !== "string" ||
+        email.trim().length > 254 ||
+        !emailPattern.test(email.trim())
+    ) {
         return "A valid email is required";
     }
 
-    if (!password || typeof password !== "string" || password.length < 8) {
-        return "Password must contain at least 8 characters";
+    if (
+        typeof password !== "string" ||
+        [...password].length < 8 ||
+        Buffer.byteLength(password, "utf8") > 72
+    ) {
+        return "Password must contain at least 8 characters and no more than 72 UTF-8 bytes";
     }
 
     return null;
@@ -30,7 +45,7 @@ const validateCredentials = ({ name, email, password }, isRegistration = false) 
 
 const registerUser = async (req, res) => {
     try {
-        const { name, email, password } = req.body;
+        const { name, email, password } = req.body || {};
         const validationError = validateCredentials({ name, email, password }, true);
 
         if (validationError) return res.status(422).json({ message: validationError });
@@ -46,19 +61,19 @@ const registerUser = async (req, res) => {
         return res.status(201).json({ message: "User registered successfully", user: publicUser(user) });
     } catch (error) {
         if (error.code === 11000) return res.status(409).json({ message: "User already exists" });
-        console.error("Registration failed:", error.message);
+        console.error("Registration failed:", error);
         return res.status(500).json({ message: "Registration failed" });
     }
 };
 
 const loginUser = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { email, password } = req.body || {};
         const validationError = validateCredentials({ email, password });
 
         if (validationError) return res.status(422).json({ message: validationError });
 
-        const user = await User.findOne({ email: email.trim().toLowerCase() });
+        const user = await User.findOne({ email: email.trim().toLowerCase() }).select("+password");
         if (!user || !(await user.comparePassword(password))) {
             return res.status(401).json({ message: "Invalid credentials" });
         }
@@ -66,7 +81,7 @@ const loginUser = async (req, res) => {
         res.cookie("token", generateToken(user._id), cookieOptions);
         return res.status(200).json({ message: "Login successful", user: publicUser(user) });
     } catch (error) {
-        console.error("Login failed:", error.message);
+        console.error("Login failed:", error);
         return res.status(500).json({ message: "Login failed" });
     }
 };
