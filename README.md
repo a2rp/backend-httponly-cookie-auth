@@ -31,7 +31,7 @@ npm install
 copy .env.example .env
 ```
 
-Replace the `JWT_SECRET` placeholder with a unique random value of at least 32 characters. In production, set `NODE_ENV=production` and provide the exact trusted frontend origins in `CLIENT_ORIGINS`.
+Replace the `JWT_SECRET` placeholder with a unique random value of at least 32 characters. In production, set `NODE_ENV=production` and provide the exact trusted frontend origins in `CLIENT_ORIGINS`. If the frontend and API are hosted on different sites, also set `COOKIE_SAME_SITE=none`; serve the API over HTTPS so the cookie's `Secure` flag is enabled.
 
 Start the development server:
 
@@ -50,7 +50,7 @@ The default port is `1198`.
 | `JWT_SECRET` | Yes | Unique random signing secret, minimum 32 characters |
 | `NODE_ENV` | No | Use `production` to enable Secure cookies |
 | `CLIENT_ORIGINS` | No | Comma-separated trusted frontend origins |
-| `COOKIE_SAME_SITE` | No | `strict`, `lax`, or `none`; defaults to `lax`. `none` requires production Secure cookies. |
+| `COOKIE_SAME_SITE` | No | Cookie policy; defaults to `lax`. Use `none` for cross-site frontend/API deployments; it requires production Secure cookies. |
 
 ## API
 
